@@ -10,14 +10,6 @@ function clean_input($data) {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
-
-/* ================================
-   USER FUNCTIONS
-================================ */
-/* ================================
-   LEAVE FUNCTIONS
-================================ */
-
 function get_user_leaves($user_id) {
 
     $conn = koneksi_db();
