@@ -1,0 +1,46 @@
+# ===== DATABASE =====
+Database/
+*.sql
+
+# ===== CONFIG SENSITIF =====
+config/connection.php
+config/.env
+.env
+.env.local
+
+# ===== SISTEM OPERASI =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== IDE/EDITOR =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.VS/
+
+# ===== NODE/PACKAGE =====
+node_modules/
+package-lock.json
+yarn.lock
+
+# ===== COMPOSER =====
+vendor/
+composer.lock
+
+# ===== SESSION/CACHE =====
+sessions/
+*.log
+temp/
+cache/
+
+# ===== OS SPECIFIC =====
+*.exe
+*.dll
+
+# ===== BACKUP FILES =====
+*.bak
+*.backup
+*.tmp
