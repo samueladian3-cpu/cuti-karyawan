@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <div class="card">
             <div class="card-header">
-                <img src="../img/logo.png" alt="Logo Kabupaten Kupang" class="logo-img">
+                <img src="Astra-Agro.gif" alt="Logo Kabupaten Kupang" class="logo-img">
                 <h4 class="app-title">Sistem Cuti Karyawan</h4>
                 <p class="app-subtitle">Portal Internal Perusahaan</p>
             </div>
