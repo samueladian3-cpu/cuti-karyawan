@@ -277,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <div class="footer-links">
-            <p>&copy; <?= date('Y') ?> Pemerintah Kabupaten Kupang</p>
+            <p>&copy; <?= date('Y') ?> PT Makmur</p>
         </div>
     </div>
 
