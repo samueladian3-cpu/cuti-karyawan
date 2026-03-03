@@ -1,6 +1,6 @@
 # ===== DATABASE =====
-Database/
-*.sql
+Database/*.sql
+Database/*.backup
 
 # ===== CONFIG SENSITIF =====
 config/connection.php
@@ -32,9 +32,16 @@ composer.lock
 
 # ===== SESSION/CACHE =====
 sessions/
-*.log
+logs/*.log
+logs/*.tmp
 temp/
 cache/
+
+# ===== DEBUG/DEVELOPMENT =====
+debug.php
+setup-db.php
+sql.txt
+*.txt.bak
 
 # ===== OS SPECIFIC =====
 *.exe

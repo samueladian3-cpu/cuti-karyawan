@@ -1,7 +1,3 @@
-/* ================================================
-   admin-dashboard.js — Dashboard Functionality
-   ================================================ */
-
 document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.getElementById('toggleSidebar');
     const sidebar = document.getElementById('dashboardSidebar');

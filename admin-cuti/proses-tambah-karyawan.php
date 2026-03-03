@@ -1,180 +1,185 @@
 <?php
-header('Content-Type: application/json');
+// Set error handling sebelum apapun
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', '../logs/php-error.log');
 
-// Validasi request method
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Request method tidak valid']);
-    exit;
-}
+// Ensure no output before headers
+ob_start();
 
-// Include connection
-require_once '../config/connection.php';
-$conn = koneksi_db();
+// Set proper headers FIRST
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-cache, no-store, must-revalidate');
 
-if (!$conn) {
-    echo json_encode(['success' => false, 'message' => 'Koneksi database gagal']);
-    exit;
-}
+// Set HTTP status code default
+http_response_code(200);
 
-// Ambil data dari form
-$npk = isset($_POST['npk']) ? trim($_POST['npk']) : '';
-$nama = isset($_POST['nama']) ? trim($_POST['nama']) : '';
-$jabatan = isset($_POST['jabatan']) ? trim($_POST['jabatan']) : '';
-$tgl_masuk = isset($_POST['tgl_masuk']) ? trim($_POST['tgl_masuk']) : '';
-$tahun_hak = isset($_POST['tahun_hak']) ? intval($_POST['tahun_hak']) : date('Y');
-$hak_cuti = isset($_POST['hak_cuti']) ? intval($_POST['hak_cuti']) : 12;
-$berlaku_mulai = isset($_POST['berlaku_mulai']) ? trim($_POST['berlaku_mulai']) : '';
-$berlaku_sampai = isset($_POST['berlaku_sampai']) ? trim($_POST['berlaku_sampai']) : '';
-$tentative_sampai = isset($_POST['tentative_sampai']) ? trim($_POST['tentative_sampai']) : '';
-$tipe = isset($_POST['tipe']) ? trim($_POST['tipe']) : 'normal';
-$status = isset($_POST['status']) ? trim($_POST['status']) : 'aktif';
-$keterangan = isset($_POST['keterangan']) ? trim($_POST['keterangan']) : '';
+try {
+    // Validasi request method
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception('Request method tidak valid');
+    }
 
-// Validasi field wajib
-if (empty($npk)) {
-    echo json_encode(['success' => false, 'message' => 'NPK harus diisi']);
-    exit;
-}
+    // Include connection dengan validasi
+    $connection_file = dirname(__DIR__) . '/config/connection.php';
+    if (!file_exists($connection_file)) {
+        throw new Exception('File koneksi tidak ditemukan: ' . $connection_file);
+    }
 
-if (empty($nama)) {
-    echo json_encode(['success' => false, 'message' => 'Nama lengkap harus diisi']);
-    exit;
-}
+    require_once $connection_file;
+    
+    if (!function_exists('koneksi_db')) {
+        throw new Exception('Fungsi koneksi_db tidak ditemukan');
+    }
 
-if (empty($jabatan)) {
-    echo json_encode(['success' => false, 'message' => 'Jabatan harus diisi']);
-    exit;
-}
+    $conn = koneksi_db();
+    
+    if (!$conn) {
+        throw new Exception('Koneksi database gagal');
+    }
 
-if (empty($tgl_masuk)) {
-    echo json_encode(['success' => false, 'message' => 'Tanggal masuk harus diisi']);
-    exit;
-}
+    if (!($conn instanceof mysqli)) {
+        throw new Exception('Koneksi database tidak valid');
+    }
 
-if (empty($berlaku_mulai)) {
-    echo json_encode(['success' => false, 'message' => 'Berlaku mulai harus diisi']);
-    exit;
-}
+    // Ambil dan sanitasi data dari form
+    $npk = isset($_POST['npk']) ? trim($_POST['npk']) : '';
+    $nama = isset($_POST['nama']) ? trim($_POST['nama']) : '';
+    $jabatan = isset($_POST['jabatan']) ? trim($_POST['jabatan']) : '';
+    $tgl_masuk = isset($_POST['tgl_masuk']) ? trim($_POST['tgl_masuk']) : '';
+    $tahun_hak = isset($_POST['tahun_hak']) ? intval($_POST['tahun_hak']) : date('Y');
+    $hak_cuti = isset($_POST['hak_cuti']) ? intval($_POST['hak_cuti']) : 12;
+    $berlaku_mulai = isset($_POST['berlaku_mulai']) ? trim($_POST['berlaku_mulai']) : '';
+    $berlaku_sampai = isset($_POST['berlaku_sampai']) ? trim($_POST['berlaku_sampai']) : '';
+    $tentative_sampai = isset($_POST['tentative_sampai']) ? trim($_POST['tentative_sampai']) : '';
+    $tipe = isset($_POST['tipe']) ? trim($_POST['tipe']) : 'normal';
+    $status = isset($_POST['status']) ? trim($_POST['status']) : 'aktif';
+    $keterangan = isset($_POST['keterangan']) ? trim($_POST['keterangan']) : '';
 
-if (empty($berlaku_sampai)) {
-    echo json_encode(['success' => false, 'message' => 'Berlaku sampai harus diisi']);
-    exit;
-}
+    // Validasi field wajib
+    $required_fields = [
+        'npk' => 'NPK harus diisi',
+        'nama' => 'Nama lengkap harus diisi',
+        'jabatan' => 'Jabatan harus diisi',
+        'tgl_masuk' => 'Tanggal masuk harus diisi',
+        'berlaku_mulai' => 'Berlaku mulai harus diisi',
+        'berlaku_sampai' => 'Berlaku sampai harus diisi',
+        'tentative_sampai' => 'Tentative sampai harus diisi',
+        'tipe' => 'Tipe cuti harus dipilih',
+        'status' => 'Status harus dipilih'
+    ];
 
-if (empty($tentative_sampai)) {
-    echo json_encode(['success' => false, 'message' => 'Tentative sampai harus diisi']);
-    exit;
-}
+    foreach ($required_fields as $field => $message) {
+        if (empty($$field)) {
+            throw new Exception($message);
+        }
+    }
 
-if (empty($tipe)) {
-    echo json_encode(['success' => false, 'message' => 'Tipe cuti harus dipilih']);
-    exit;
-}
+    // Cek NPK sudah ada di tabel users
+    $stmt = $conn->prepare("SELECT id FROM users WHERE npk = ?");
+    if (!$stmt) {
+        throw new Exception('Database prepare error: ' . $conn->error);
+    }
 
-if (empty($status)) {
-    echo json_encode(['success' => false, 'message' => 'Status harus dipilih']);
-    exit;
-}
+    $stmt->bind_param("s", $npk);
+    if (!$stmt->execute()) {
+        throw new Exception('Database execute error: ' . $stmt->error);
+    }
 
-// Cek NPK sudah ada
-$stmt = $conn->prepare("SELECT id FROM users WHERE npk = ?");
-if ($stmt === false) {
-    echo json_encode(['success' => false, 'message' => 'Prepare statement error: ' . $conn->error]);
-    exit;
-}
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        throw new Exception('NPK sudah terdaftar');
+    }
+    $stmt->close();
 
-$stmt->bind_param("s", $npk);
-$stmt->execute();
-$result = $stmt->get_result();
+    // Validasi format tanggal
+    $date_fields = [
+        'tgl_masuk' => $tgl_masuk,
+        'berlaku_mulai' => $berlaku_mulai,
+        'berlaku_sampai' => $berlaku_sampai,
+        'tentative_sampai' => $tentative_sampai
+    ];
 
-if ($result->num_rows > 0) {
-    echo json_encode(['success' => false, 'message' => 'NPK sudah terdaftar']);
+    foreach ($date_fields as $field => $value) {
+        if (!strtotime($value)) {
+            throw new Exception('Format ' . $field . ' tidak valid');
+        }
+    }
+
+    // Validasi nilai numerik
+    if ($tahun_hak < 2000 || $tahun_hak > 2099) {
+        throw new Exception('Tahun hak harus antara 2000 - 2099');
+    }
+    if ($hak_cuti < 0 || $hak_cuti > 90) {
+        throw new Exception('Hak cuti harus antara 0 - 90 hari');
+    }
+
+    // Set nilai default untuk kolom yang belum diisi di form
+    $sisa = $hak_cuti; // Sisa cuti awal = hak cuti
+    $hk = 0; // Hari kerja awal = 0
+    $realisasi_awal = null; // Realisasi awal belum ada
+    $realisasi_akhir = null; // Realisasi akhir belum ada
+    $created_at = date('Y-m-d H:i:s');
+
+    // Insert ke database - TABEL USERS (sesuai struktur yang baru)
+    $stmt = $conn->prepare(
+        "INSERT INTO users (npk, nama, jabatan, tgl_masuk, tahun_hak, hak_cuti, berlaku_mulai, berlaku_sampai, tentative_sampai, realisasi_awal, realisasi_akhir, hk, tipe, sisa, status, keterangan, created_at) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+
+    if (!$stmt) {
+        throw new Exception('Insert prepare error: ' . $conn->error);
+    }
+
+    $stmt->bind_param(
+        "ssssiisssssisisss",
+        $npk,
+        $nama,
+        $jabatan,
+        $tgl_masuk,
+        $tahun_hak,
+        $hak_cuti,
+        $berlaku_mulai,
+        $berlaku_sampai,
+        $tentative_sampai,
+        $realisasi_awal,
+        $realisasi_akhir,
+        $hk,
+        $tipe,
+        $sisa,
+        $status,
+        $keterangan,
+        $created_at
+    );
+
+    if (!$stmt->execute()) {
+        throw new Exception('Insert execute error: ' . $stmt->error);
+    }
+
+    $last_id = $conn->insert_id;
     $stmt->close();
     $conn->close();
-    exit;
-}
-$stmt->close();
 
-// Validasi format tanggal
-if (!strtotime($tgl_masuk)) {
-    echo json_encode(['success' => false, 'message' => 'Format tanggal masuk tidak valid']);
-    exit;
-}
-
-if (!strtotime($berlaku_mulai)) {
-    echo json_encode(['success' => false, 'message' => 'Format berlaku mulai tidak valid']);
-    exit;
-}
-
-if (!strtotime($berlaku_sampai)) {
-    echo json_encode(['success' => false, 'message' => 'Format berlaku sampai tidak valid']);
-    exit;
-}
-
-if (!strtotime($tentative_sampai)) {
-    echo json_encode(['success' => false, 'message' => 'Format tentative sampai tidak valid']);
-    exit;
-}
-
-// Validasi nilai numerik
-if ($tahun_hak < 2000 || $tahun_hak > 2099) {
-    echo json_encode(['success' => false, 'message' => 'Tahun hak harus antara 2000 - 2099']);
-    exit;
-}
-
-if ($hak_cuti < 0 || $hak_cuti > 90) {
-    echo json_encode(['success' => false, 'message' => 'Hak cuti harus antara 0 - 90 hari']);
-    exit;
-}
-
-// Set nilai sisa awal sama dengan hak_cuti
-$sisa = $hak_cuti;
-$hk = 0;
-
-// Insert ke database
-$stmt = $conn->prepare(
-    "INSERT INTO users (npk, nama, jabatan, tgl_masuk, tahun_hak, hak_cuti, 
-     berlaku_mulai, berlaku_sampai, tentative_sampai, tipe, sisa, hk, status, keterangan) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-);
-
-if ($stmt === false) {
-    echo json_encode(['success' => false, 'message' => 'Prepare statement error: ' . $conn->error]);
-    exit;
-}
-
-$stmt->bind_param(
-    "ssssiissssiiss",
-    $npk,
-    $nama,
-    $jabatan,
-    $tgl_masuk,
-    $tahun_hak,
-    $hak_cuti,
-    $berlaku_mulai,
-    $berlaku_sampai,
-    $tentative_sampai,
-    $tipe,
-    $sisa,
-    $hk,
-    $status,
-    $keterangan
-);
-
-if ($stmt->execute()) {
-    $last_id = $conn->insert_id;
+    // Clear output buffer dan send response
+    ob_end_clean();
+    http_response_code(200);
     echo json_encode([
         'success' => true,
-        'message' => 'Data karyawan berhasil ditambahkan',
+        'message' => 'Data karyawan berhasil ditambahkan ke tabel users',
         'id' => $last_id
     ]);
-} else {
+    exit;
+
+} catch (Exception $e) {
+    // Clear buffer untuk menghindari output sebelumnya
+    ob_end_clean();
+    
+    http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Gagal menambahkan data: ' . $stmt->error
+        'message' => $e->getMessage()
     ]);
+    exit;
 }
-
-$stmt->close();
-$conn->close();
 ?>

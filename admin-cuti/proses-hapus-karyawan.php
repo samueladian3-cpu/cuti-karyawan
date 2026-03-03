@@ -1,73 +1,87 @@
 <?php
-header('Content-Type: application/json');
+// Start output buffering to prevent any output before JSON
+ob_start();
 
-// Validasi request method
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Request method tidak valid']);
-    exit;
-}
+// Set error handling before anything else
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
-// Include connection
-require_once '../config/connection.php';
-$conn = koneksi_db();
+header('Content-Type: application/json; charset=utf-8');
 
-if (!$conn) {
-    echo json_encode(['success' => false, 'message' => 'Koneksi database gagal']);
-    exit;
-}
+try {
+    // Validasi request method
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception('Request method tidak valid');
+    }
 
-// Ambil ID dari POST
-$id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+    // Include connection
+    require_once '../config/connection.php';
+    $conn = koneksi_db();
 
-// Validasi ID
-if (empty($id) || $id <= 0) {
-    echo json_encode(['success' => false, 'message' => 'ID karyawan tidak valid']);
-    exit;
-}
+    if (!$conn) {
+        throw new Exception('Koneksi database gagal - database tidak ditemukan atau kredensial salah');
+    }
 
-// Cek apakah data karyawan ada
-$stmt = $conn->prepare("SELECT nama FROM users WHERE id = ?");
-if ($stmt === false) {
-    echo json_encode(['success' => false, 'message' => 'Prepare statement error: ' . $conn->error]);
-    exit;
-}
+    // Validate connection is a mysqli object
+    if (!($conn instanceof mysqli)) {
+        throw new Exception('Koneksi database tidak valid - bukan object mysqli');
+    }
 
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
+    // Ambil ID dari POST
+    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
-if ($result->num_rows === 0) {
-    echo json_encode(['success' => false, 'message' => 'Data karyawan tidak ditemukan']);
+    // Validasi ID
+    if (empty($id) || $id <= 0) {
+        throw new Exception('ID karyawan tidak valid');
+    }
+
+    // Cek apakah data karyawan ada
+    $stmt = $conn->prepare("SELECT nama FROM users WHERE id = ?");
+    if ($stmt === false) {
+        throw new Exception('Prepare SELECT error: ' . ($conn->error ? $conn->error : 'Unknown error'));
+    }
+
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        throw new Exception('Data karyawan tidak ditemukan');
+    }
+
+    $row = $result->fetch_assoc();
+    $nama = $row['nama'];
+    $stmt->close();
+
+    // Hapus data karyawan
+    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    if ($stmt === false) {
+        throw new Exception('Prepare DELETE error: ' . ($conn->error ? $conn->error : 'Unknown error'));
+    }
+
+    $stmt->bind_param("i", $id);
+
+    if (!$stmt->execute()) {
+        throw new Exception('Gagal menghapus data: ' . $stmt->error);
+    }
+
     $stmt->close();
     $conn->close();
-    exit;
-}
 
-$row = $result->fetch_assoc();
-$nama = $row['nama'];
-$stmt->close();
-
-// Hapus data karyawan
-$stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-if ($stmt === false) {
-    echo json_encode(['success' => false, 'message' => 'Prepare statement error: ' . $conn->error]);
-    exit;
-}
-
-$stmt->bind_param("i", $id);
-
-if ($stmt->execute()) {
+    http_response_code(200);
     echo json_encode([
         'success' => true,
         'message' => 'Data karyawan berhasil dihapus'
     ]);
-} else {
+    ob_end_flush();
+
+} catch (Exception $e) {
+    ob_end_clean();
+    http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => 'Gagal menghapus data: ' . $stmt->error
+        'message' => $e->getMessage(),
+        'error_detail' => $e->getMessage()
     ]);
 }
-
-$stmt->close();
-$conn->close();
 ?>

@@ -59,6 +59,11 @@ $conn = koneksi_db();
             letter-spacing: 0.5px;
         }
 
+        .stat-card h5 i {
+            margin-right: 6px;
+            opacity: 0.8;
+        }
+
         .stat-card .number {
             font-size: 32px;
             font-weight: 700;
@@ -225,29 +230,97 @@ $conn = koneksi_db();
         <!-- Dashboard Page -->
         <div id="dashboard-page" class="page-content active">
             <div class="dashboard-content">
-                <h2>Dashboard</h2>
+                <h2>Dashboard Statistik</h2>
                 <p class="subtitle">Selamat datang di sistem manajemen cuti karyawan</p>
-
+                
+                <!-- Statistik Cards -->
                 <div class="stat-grid">
-                    <div class="stat-card">
-                        <h5>Total Karyawan</h5>
-                        <div class="number">42</div>
-                        <div class="description">Karyawan aktif</div>
+                    <!-- Total Karyawan -->
+                    <div class="stat-card" style="border-left-color: #4f8cff;">
+                        <h5><i class="fas fa-users"></i> Total Karyawan</h5>
+                        <div class="number" id="stat-total-karyawan">0</div>
+                        <div class="description">Terdaftar dalam sistem</div>
                     </div>
-                    <div class="stat-card active">
-                        <h5>Cuti Disetujui</h5>
-                        <div class="number">18</div>
-                        <div class="description">Bulan ini</div>
+                    
+                    <!-- Karyawan Aktif -->
+                    <div class="stat-card active" style="border-left-color: #52d1b0;">
+                        <h5><i class="fas fa-user-check"></i> Status Aktif</h5>
+                        <div class="number" id="stat-karyawan-aktif">0</div>
+                        <div class="description">Karyawan dengan status aktif</div>
                     </div>
-                    <div class="stat-card pending">
-                        <h5>Menunggu Persetujuan</h5>
-                        <div class="number">7</div>
-                        <div class="description">Pending requests</div>
+                    
+                    <!-- Total Hak Cuti -->
+                    <div class="stat-card" style="border-left-color: #ffc107;">
+                        <h5><i class="fas fa-calendar-alt"></i> Total Hak Cuti</h5>
+                        <div class="number" id="stat-total-hak">0</div>
+                        <div class="description">Hari kerja</div>
                     </div>
-                    <div class="stat-card rejected">
-                        <h5>Ditolak</h5>
-                        <div class="number">3</div>
-                        <div class="description">Tahun ini</div>
+                    
+                    <!-- Cuti Terpakai -->
+                    <div class="stat-card rejected" style="border-left-color: #e03131;">
+                        <h5><i class="fas fa-calendar-times"></i> Cuti Terpakai</h5>
+                        <div class="number" id="stat-cuti-terpakai">0</div>
+                        <div class="description">Hari kerja (<span id="stat-persentase">0%</span>)</div>
+                    </div>
+                    
+                    <!-- Sisa Cuti -->
+                    <div class="stat-card" style="border-left-color: #52d1b0;">
+                        <h5><i class="fas fa-calendar-check"></i> Sisa Cuti</h5>
+                        <div class="number" id="stat-sisa-cuti">0</div>
+                        <div class="description">Hari kerja tersisa</div>
+                    </div>
+                    
+                    <!-- Rata-rata Sisa -->
+                    <div class="stat-card" style="border-left-color: #4f8cff;">
+                        <h5><i class="fas fa-chart-line"></i> Rata-rata Sisa</h5>
+                        <div class="number" id="stat-avg-sisa">0</div>
+                        <div class="description">Hari per karyawan</div>
+                    </div>
+                </div>
+                
+                <!-- Breakdown by Status -->
+                <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h4 style="color: #0b1e5b; margin-bottom: 20px; font-weight: 700;"><i class="fas fa-chart-bar" style="margin-right: 8px;"></i> Breakdown Status Karyawan</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="background: #e8f8f0; padding: 16px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; font-weight: 700; color: #52d1b0;" id="breakdown-aktif">0</div>
+                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Aktif</div>
+                        </div>
+                        <div style="background: #fff4e8; padding: 16px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; font-weight: 700; color: #ff6d00;" id="breakdown-hangus">0</div>
+                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Hangus</div>
+                        </div>
+                        <div style="background: #e8f0ff; padding: 16px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; font-weight: 700; color: #4f8cff;" id="breakdown-selesai">0</div>
+                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Selesai</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Breakdown by Tipe Cuti -->
+                <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h4 style="color: #0b1e5b; margin-bottom: 20px; font-weight: 700;"><i class="fas fa-clipboard-list" style="margin-right: 8px;"></i> Breakdown Tipe Cuti</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="background: #e8f0ff; padding: 16px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; font-weight: 700; color: #4f8cff;" id="breakdown-normal">0</div>
+                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Normal</div>
+                        </div>
+                        <div style="background: #fff4e8; padding: 16px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; font-weight: 700; color: #ff6d00;" id="breakdown-tentative">0</div>
+                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Tentative</div>
+                        </div>
+                        <div style="background: #ffe8e8; padding: 16px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 28px; font-weight: 700; color: #e03131;" id="breakdown-pinjam">0</div>
+                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Pinjam</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Karyawan Terbaru -->
+                <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h4 style="color: #0b1e5b; margin-bottom: 20px; font-weight: 700;"><i class="fas fa-users" style="margin-right: 8px;"></i> 5 Karyawan Terbaru</h4>
+                    <div id="karyawan-terbaru-list">
+                        <div style="padding: 20px; text-align: center; color: #999;">Loading...</div>
                     </div>
                 </div>
             </div>
@@ -429,7 +502,7 @@ $conn = koneksi_db();
                         <h6 style="color: #0b1e5b; margin-top: 15px; margin-bottom: 10px; font-size: 16px; font-weight: 600;">Hapus Data Karyawan</h6>
                         <p style="color: #666; margin-bottom: 10px;">Apakah Anda yakin ingin menghapus data karyawan:</p>
                         <p style="color: #0b1e5b; font-weight: 600; font-size: 16px; margin-bottom: 20px;" id="deleteKaryawanNama">-</p>
-                        <p style="color: #e03131; font-size: 13px;">⚠️ Tindakan ini tidak dapat dibatalkan. Semua data terkait akan dihapus dari sistem.</p>
+                        <p style="color: #e03131; font-size: 13px;"><i class="fas fa-exclamation-triangle"></i> Tindakan ini tidak dapat dibatalkan. Semua data terkait akan dihapus dari sistem.</p>
                     </div>
                     <input type="hidden" id="deleteKaryawanId" value="">
                 </div>
@@ -543,33 +616,56 @@ $conn = koneksi_db();
             e.preventDefault();
             
             const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            const submitBtn = document.querySelector('button[form="formTambahKaryawan"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            }
             
             fetch('proses-tambah-karyawan.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(async response => {
+                const text = await response.text();
+                
+                console.log('Status:', response.status);
+                console.log('Raw Response:', text);
+                
+                if (!text || text.trim() === '') {
+                    throw new Error('Server mengirimkan respons kosong. Cek logs/php-error.log');
+                }
+                
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON:', text);
+                    throw new Error('Respons tidak valid JSON: ' + text.substring(0, 200));
+                }
+            })
             .then(data => {
+                console.log('Response:', data);
                 if(data.success) {
                     showSpinner();
                     setTimeout(() => {
-                        alert('Data karyawan berhasil ditambahkan!');
+                        alert('✓ Data karyawan berhasil ditambahkan!');
                         location.reload();
                     }, 300);
                 } else {
-                    alert('Error: ' + data.message);
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Data';
+                    alert('Error: ' + (data.message || 'Unknown error'));
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Data';
+                    }
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan: ' + error);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Data';
+                console.error('❌ Error:', error);
+                alert('Terjadi kesalahan:\n' + error.message);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Data';
+                }
             });
         });
 
@@ -594,8 +690,10 @@ $conn = koneksi_db();
             const id = document.getElementById('deleteKaryawanId').value;
             const btn = this;
             
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menghapus...';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menghapus...';
+            }
             
             fetch('proses-hapus-karyawan.php', {
                 method: 'POST',
@@ -604,8 +702,20 @@ $conn = koneksi_db();
                 },
                 body: 'id=' + encodeURIComponent(id)
             })
-            .then(response => response.json())
+            .then(response => {
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    // Response is not JSON - this is an error
+                    return response.text().then(text => {
+                        throw new Error('Server returned non-JSON response: ' + (text.substring(0, 100) || 'empty response'));
+                    });
+                }
+            })
             .then(data => {
+                console.log('Response:', data);
                 if(data.success) {
                     showSpinner();
                     setTimeout(() => {
@@ -613,16 +723,20 @@ $conn = koneksi_db();
                         location.reload();
                     }, 300);
                 } else {
-                    alert('Error: ' + data.message);
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-trash-alt"></i> Ya, Hapus Data';
+                    alert('Error: ' + (data.message || 'Unknown error'));
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-trash-alt"></i> Ya, Hapus Data';
+                    }
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan: ' + error);
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-trash-alt"></i> Ya, Hapus Data';
+                console.error('❌ Delete Error:', error);
+                alert('Terjadi kesalahan: ' + error.message);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-trash-alt"></i> Ya, Hapus Data';
+                }
             });
         });
 
@@ -630,6 +744,183 @@ $conn = koneksi_db();
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('active');
         });
+
+        // ── LOAD STATISTIK DASHBOARD ──
+        function loadStatistik() {
+            console.log('📊 Loading statistik...');
+            
+            fetch('api-get-statistik.php')
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        const data = result.data;
+                        
+                        // Update stat cards
+                        document.getElementById('stat-total-karyawan').textContent = data.total_karyawan;
+                        document.getElementById('stat-karyawan-aktif').textContent = data.karyawan_aktif;
+                        document.getElementById('stat-total-hak').textContent = data.total_hak_cuti;
+                        document.getElementById('stat-cuti-terpakai').textContent = data.total_cuti_terpakai;
+                        document.getElementById('stat-sisa-cuti').textContent = data.total_sisa_cuti;
+                        document.getElementById('stat-avg-sisa').textContent = data.avg_sisa_cuti;
+                        document.getElementById('stat-persentase').textContent = data.persentase_terpakai + '%';
+                        
+                        // Update breakdown status
+                        document.getElementById('breakdown-aktif').textContent = data.karyawan_aktif;
+                        document.getElementById('breakdown-hangus').textContent = data.karyawan_hangus;
+                        document.getElementById('breakdown-selesai').textContent = data.karyawan_selesai;
+                        
+                        // Update breakdown tipe
+                        document.getElementById('breakdown-normal').textContent = data.cuti_normal;
+                        document.getElementById('breakdown-tentative').textContent = data.cuti_tentative;
+                        document.getElementById('breakdown-pinjam').textContent = data.cuti_pinjam;
+                        
+                        // Update karyawan terbaru
+                        const terbaruList = document.getElementById('karyawan-terbaru-list');
+                        if (data.karyawan_terbaru.length > 0) {
+                            terbaruList.innerHTML = data.karyawan_terbaru.map(k => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e0e7ff;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #0b1e5b;">${k.nama}</div>
+                                        <div style="font-size: 13px; color: #666;">${k.npk} • ${k.jabatan}</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 20px; font-weight: 700; color: #4f8cff;">${k.sisa}/${k.hak_cuti}</div>
+                                        <div style="font-size: 12px; color: #999;">Sisa Cuti</div>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            terbaruList.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">Belum ada data</div>';
+                        }
+                        
+                        console.log('✅ Statistik loaded successfully');
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Error loading statistik:', error);
+                });
+        }
+
+        // ── LOAD DATA KARYAWAN ──
+        function loadDataKaryawan() {
+            const tbody = document.getElementById('tableKaryawan');
+            
+            if (!tbody) return; // Keluar jika element tidak ada
+            
+            console.log('📥 Loading data karyawan...');
+            
+            fetch('api-get-karyawan.php')
+                .then(response => {
+                    console.log('📡 Response status:', response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            // Try to parse as JSON for error messages
+                            try {
+                                const data = JSON.parse(text);
+                                throw new Error(`HTTP ${response.status}: ${data.message || response.statusText}`);
+                            } catch (e) {
+                                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                            }
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('✅ Response data:', data);
+                    
+                    if (!data.success) {
+                        const errorMsg = data.message || 'Unknown error';
+                        console.error('❌ API Error:', errorMsg);
+                        tbody.innerHTML = `<tr><td colspan="12" align="center" style="padding: 40px; color: #e03131;">
+                            <strong><i class="fas fa-exclamation-circle"></i> Error:</strong> ${errorMsg}
+                            ${data.error_detail ? '<br><small>' + data.error_detail + '</small>' : ''}
+                            <br><small><a href="../debug.php" target="_blank">Buka debug.php untuk informasi lebih lanjut</a></small>
+                        </td></tr>`;
+                        return;
+                    }
+                    
+                    if (data.data.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="12" align="center" style="padding: 40px; color: #999;"><i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.3;"></i>Belum ada data karyawan</td></tr>`;
+                        console.log('ℹ️ No data available');
+                        return;
+                    }
+                    
+                    console.log(`✅ Loaded ${data.data.length} records`);
+                    
+                    // Generate table rows
+                    tbody.innerHTML = data.data.map((karyawan, index) => `
+                        <tr style="border-bottom: 1px solid #e0e7ff;">
+                            <td style="padding: 16px; color: #666;">${index + 1}</td>
+                            <td style="padding: 16px; color: #0b1e5b; font-weight: 600;">${karyawan.npk}</td>
+                            <td style="padding: 16px; color: #0b1e5b;">${karyawan.nama}</td>
+                            <td style="padding: 16px; color: #666;">${karyawan.jabatan || '-'}</td>
+                            <td style="padding: 16px; color: #666; white-space: nowrap;">${karyawan.tgl_masuk}</td>
+                            <td style="padding: 16px; color: #666;">${karyawan.tahun_hak}</td>
+                            <td style="padding: 16px; text-align: center; color: #0b1e5b; font-weight: 600;">${karyawan.hak_cuti}</td>
+                            <td style="padding: 16px; text-align: center; color: #666;">${karyawan.hk || 0}</td>
+                            <td style="padding: 16px; text-align: center; color: #4f8cff; font-weight: 600;">${karyawan.sisa || karyawan.hak_cuti}</td>
+                            <td style="padding: 16px;"><span style="background: #e8f0ff; color: #4f8cff; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;">${karyawan.tipe}</span></td>
+                            <td style="padding: 16px;"><span style="background: ${karyawan.status === 'aktif' ? '#e8f8f0' : '#fff4e8'}; color: ${karyawan.status === 'aktif' ? '#52d1b0' : '#ff6d00'}; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;">${karyawan.status}</span></td>
+                            <td style="padding: 16px; text-align: center;">
+                                <button class="btn-delete" data-id="${karyawan.id}" data-nama="${karyawan.nama}" style="background: #e03131; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">
+                                    <i class="fas fa-trash-alt"></i> Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    // Re-attach delete event listeners
+                    attachDeleteHandlers();
+                })
+                .catch(error => {
+                    console.error('❌ Full Error:', error);
+                    tbody.innerHTML = `<tr><td colspan="12" align="center" style="padding: 40px; color: #e03131;">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Error mengambil data:</strong> ${error.message}
+                        <br><small><a href="../debug.php" target="_blank">Buka debug.php untuk informasi lebih lanjut</a></small>
+                    </td></tr>`;
+                });
+        }
+        
+        // Attach delete handlers
+        function attachDeleteHandlers() {
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const nama = this.getAttribute('data-nama');
+                    
+                    document.getElementById('deleteKaryawanNama').textContent = nama;
+                    document.getElementById('deleteKaryawanId').value = id;
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('modalKonfirmasiHapus'));
+                    modal.show();
+                });
+            });
+        }
+        
+        // Load data saat page content di-toggle
+        const dataKaryawanLink = document.querySelector('[data-page="data-karyawan"]');
+        if (dataKaryawanLink) {
+            dataKaryawanLink.addEventListener('click', () => {
+                setTimeout(loadDataKaryawan, 600); // Tunggu animasi selesai
+            });
+        }
+        
+        // Load statistik saat klik dashboard link
+        const dashboardLink = document.querySelector('[data-page="dashboard"]');
+        if (dashboardLink) {
+            dashboardLink.addEventListener('click', () => {
+                setTimeout(loadStatistik, 600); // Tunggu animasi selesai
+            });
+        }
+        
+        // Load data jika ada di URL hash
+        if (window.location.hash === '#data-karyawan' || document.getElementById('data-karyawan-page')?.classList.contains('active')) {
+            loadDataKaryawan();
+        } else {
+            // Load statistik saat pertama kali buka dashboard
+            loadStatistik();
+        }
     </script>
 </body>
 </html>
