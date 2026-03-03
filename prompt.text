@@ -1,0 +1,34 @@
+saya ingin menambahkan data kryawan di dashboard.php, tidak di alihkan ke file form-karyawan.php melainkan munculkan modal form input data karyawan pada dashboard.php struktur tabel untuk mendukung form inputan data karyawan nya struktur tabel nya agar mirip dengan tabel di databse adalah sebagai berikut:
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    npk VARCHAR(20) NOT NULL,
+    nama VARCHAR(100) NOT NULL,
+    jabatan VARCHAR(100),
+
+    tgl_masuk DATE NOT NULL,
+
+    tahun_hak YEAR NOT NULL, -- contoh: 2026
+    hak_cuti INT DEFAULT 12,
+
+    berlaku_mulai DATE NOT NULL,  -- 2026-01-01
+    berlaku_sampai DATE NOT NULL, -- 2026-12-31
+
+    tentative_sampai DATE NOT NULL, -- 2027-03-31
+
+    realisasi_awal DATE NULL,
+    realisasi_akhir DATE NULL,
+
+    hk INT DEFAULT 0, -- hari kerja yg diambil
+
+    tipe ENUM('normal','tentative','pinjam') DEFAULT 'normal',
+
+    sisa INT DEFAULT 12,
+
+    status ENUM('aktif','hangus','selesai') DEFAULT 'aktif',
+
+    keterangan VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

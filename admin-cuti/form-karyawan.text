@@ -1,0 +1,390 @@
+<?php
+// filepath: c:\xamppp\htdocs\cuti-karyawan\admin-cuti\form-karyawan.php
+
+require_once '../config/connection.php';
+$conn = koneksi_db();
+
+$mode = $_GET['mode'] ?? 'add'; // add atau edit
+$id = $_GET['id'] ?? null;
+$data = null;
+
+// Jika mode edit, ambil data dari database
+if ($mode === 'edit' && $id) {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+    $stmt->close();
+}
+
+// Handle form submit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $npk = $_POST['npk'] ?? '';
+    $nama = $_POST['nama'] ?? '';
+    $jabatan = $_POST['jabatan'] ?? '';
+    $tgl_masuk = $_POST['tgl_masuk'] ?? '';
+    $tahun_hak = $_POST['tahun_hak'] ?? date('Y');
+    $hak_cuti = $_POST['hak_cuti'] ?? 12;
+    $berlaku_mulai = $_POST['berlaku_mulai'] ?? '';
+    $berlaku_sampai = $_POST['berlaku_sampai'] ?? '';
+    $tentative_sampai = $_POST['tentative_sampai'] ?? '';
+    $tipe = $_POST['tipe'] ?? 'normal';
+    $status = $_POST['status'] ?? 'aktif';
+    $keterangan = $_POST['keterangan'] ?? '';
+
+    if ($mode === 'add') {
+        $sisa = $hak_cuti;
+        $stmt = $conn->prepare(
+            "INSERT INTO users (npk, nama, jabatan, tgl_masuk, tahun_hak, hak_cuti, 
+             berlaku_mulai, berlaku_sampai, tentative_sampai, tipe, sisa, status, keterangan) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->bind_param(
+            'ssssisssdsiss',
+            $npk, $nama, $jabatan, $tgl_masuk, $tahun_hak, $hak_cuti,
+            $berlaku_mulai, $berlaku_sampai, $tentative_sampai, 
+            $hak_cuti, $sisa, $status, $keterangan
+        );
+        
+        if ($stmt->execute()) {
+            header("Location: dashboard.php?success=Data karyawan berhasil ditambahkan");
+            exit;
+        }
+    } else if ($mode === 'edit' && $id) {
+        $stmt = $conn->prepare(
+            "UPDATE users SET npk=?, nama=?, jabatan=?, tgl_masuk=?, tahun_hak=?, hak_cuti=?,
+             berlaku_mulai=?, berlaku_sampai=?, tentative_sampai=?, tipe=?, status=?, keterangan=?
+             WHERE id=?"
+        );
+        $stmt->bind_param(
+            'ssssisssdssi',
+            $npk, $nama, $jabatan, $tgl_masuk, $tahun_hak, $hak_cuti,
+            $berlaku_mulai, $berlaku_sampai, $tentative_sampai, $tipe, $status, $keterangan, $id
+        );
+        
+        if ($stmt->execute()) {
+            header("Location: dashboard.php?success=Data karyawan berhasil diperbarui");
+            exit;
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $mode === 'add' ? 'Tambah' : 'Edit' ?> Karyawan</title>
+    <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
+    <link rel="stylesheet" href="../assets/css/spinner.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-header {
+            margin-bottom: 32px;
+            border-bottom: 2px solid #e0e7ff;
+            padding-bottom: 16px;
+        }
+
+        .form-header h2 {
+            color: #0b1e5b;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #0b1e5b;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-group span.required {
+            color: #e03131;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 14px;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f8cff;
+            box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e0e7ff;
+        }
+
+        .form-section h3 {
+            color: #0b1e5b;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4f8cff, #52d1b0);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 140, 255, 0.3);
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+            flex: 0 0 auto;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn-submit,
+            .btn-cancel {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Spinner -->
+    <div id="loadingSpinner" class="spinner-overlay hidden">
+        <div class="spinner-container">
+            <div class="spinner-border"></div>
+            <span class="spinner-text">Processing...</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="form-container">
+            <div class="form-header">
+                <h2><?= $mode === 'add' ? '<i class="fas fa-wand-magic-sparkles"></i> Tambah Karyawan Baru' : '<i class="fas fa-pen"></i> Edit Data Karyawan' ?></h2>
+                <p><?= $mode === 'add' ? 'Masukkan data karyawan lengkap' : 'Perbarui informasi karyawan' ?></p>
+            </div>
+
+            <form method="POST" id="formKaryawan">
+                <!-- Section 1: Data Pribadi -->
+                <div class="form-section">
+                    <h3><i class="fas fa-clipboard"></i> Data Pribadi</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>NPK <span class="required">*</span></label>
+                            <input type="text" name="npk" value="<?= $data['npk'] ?? '' ?>" required>
+                            <span class="form-hint">Nomor Pegawai Korporat</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Lengkap <span class="required">*</span></label>
+                            <input type="text" name="nama" value="<?= $data['nama'] ?? '' ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Jabatan <span class="required">*</span></label>
+                            <input type="text" name="jabatan" value="<?= $data['jabatan'] ?? '' ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Masuk <span class="required">*</span></label>
+                            <input type="date" name="tgl_masuk" value="<?= $data['tgl_masuk'] ?? '' ?>" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Hak Cuti -->
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar"></i> Hak Cuti</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tahun Hak <span class="required">*</span></label>
+                            <input type="number" name="tahun_hak" value="<?= $data['tahun_hak'] ?? date('Y') ?>" min="2000" max="2099" required>
+                            <span class="form-hint">Contoh: 2026</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Hak Cuti <span class="required">*</span></label>
+                            <input type="number" name="hak_cuti" value="<?= $data['hak_cuti'] ?? 12 ?>" min="0" max="90" required>
+                            <span class="form-hint">Dalam hari kerja</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Berlaku Mulai <span class="required">*</span></label>
+                            <input type="date" name="berlaku_mulai" value="<?= $data['berlaku_mulai'] ?? '' ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Berlaku Sampai <span class="required">*</span></label>
+                            <input type="date" name="berlaku_sampai" value="<?= $data['berlaku_sampai'] ?? '' ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tentative Sampai <span class="required">*</span></label>
+                            <input type="date" name="tentative_sampai" value="<?= $data['tentative_sampai'] ?? '' ?>" required>
+                            <span class="form-hint">Batas akhir cuti tentative</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Tipe & Status -->
+                <div class="form-section">
+                    <h3><i class="fas fa-tag"></i> Tipe & Status</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tipe Cuti <span class="required">*</span></label>
+                            <select name="tipe" required>
+                                <option value="">-- Pilih Tipe --</option>
+                                <option value="normal" <?= ($data['tipe'] ?? '') === 'normal' ? 'selected' : '' ?>>Normal</option>
+                                <option value="tentative" <?= ($data['tipe'] ?? '') === 'tentative' ? 'selected' : '' ?>>Tentative</option>
+                                <option value="pinjam" <?= ($data['tipe'] ?? '') === 'pinjam' ? 'selected' : '' ?>>Pinjam</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status <span class="required">*</span></label>
+                            <select name="status" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="aktif" <?= ($data['status'] ?? '') === 'aktif' ? 'selected' : '' ?>>Aktif</option>
+                                <option value="hangus" <?= ($data['status'] ?? '') === 'hangus' ? 'selected' : '' ?>>Hangus</option>
+                                <option value="selesai" <?= ($data['status'] ?? '') === 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Keterangan -->
+                <div class="form-section">
+                    <h3><i class="fas fa-note-sticky"></i> Keterangan</h3>
+                    <div class="form-grid full">
+                        <div class="form-group">
+                            <label>Keterangan</label>
+                            <textarea name="keterangan" placeholder="Tambahkan catatan atau keterangan..."><?= $data['keterangan'] ?? '' ?></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">
+                        <?= $mode === 'add' ? '<i class="fas fa-check"></i> Tambah Karyawan' : '<i class="fas fa-floppy-disk"></i> Simpan Perubahan' ?>
+                    </button>
+                    <a href="dashboard.php" class="btn btn-cancel"><i class="fas fa-xmark"></i> Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/loading-spinner.js"></script>
+    <script>
+        const form = document.getElementById('formKaryawan');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            showSpinner('Menyimpan data...');
+            
+            // Simulate processing
+            setTimeout(() => {
+                form.submit();
+            }, 800);
+        });
+
+        // Hide spinner on load
+        window.addEventListener('load', function() {
+            hideSpinner(100);
+        });
+    </script>
+</body>
+</html>

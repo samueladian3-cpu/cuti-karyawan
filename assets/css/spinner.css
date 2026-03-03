@@ -1,0 +1,104 @@
+:root {
+    --navy: #0b1e5b;
+    --blue: #4f8cff;
+    --teal: #52d1b0;
+}
+
+/* ── SPINNER OVERLAY ── */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 30, 91, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.spinner-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ── SPINNER CONTAINER ── */
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    animation: fadeInScale 0.5s ease;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── SPINNER BORDER ── */
+.spinner-border {
+    width: 56px;
+    height: 56px;
+    border: 5px solid rgba(79, 140, 255, 0.2);
+    border-top: 5px solid #4f8cff;
+    border-right: 5px solid #52d1b0;
+    border-radius: 50%;
+    animation: spinRotate 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    box-shadow: 0 0 20px rgba(79, 140, 255, 0.3);
+}
+
+@keyframes spinRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── SPINNER TEXT ── */
+.spinner-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+    .spinner-border {
+        width: 48px;
+        height: 48px;
+        border-width: 4px;
+    }
+
+    .spinner-text {
+        font-size: 14px;
+    }
+}

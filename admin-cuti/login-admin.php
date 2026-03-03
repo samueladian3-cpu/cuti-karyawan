@@ -54,8 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login Admin - Cuti Karyawan</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-login.css">
+    <link rel="stylesheet" href="../assets/css/spinner.css">
+    
 </head>
 <body>
+    <div id="loadingSpinner" class="spinner-overlay hidden">
+    <div class="spinner-container">
+        <div class="spinner-border"></div>
+        <span class="spinner-text">Verifying credentials...</span>
+    </div>
+</div>
     <div class="container">
         <div class="login-box">
             <h2>Login Admin</h2>
@@ -79,9 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" id="password" name="password" required>
                 </div>
                 
-                <button type="submit">Login</button>
+                <button type="submit" onclick="showSpinner()">Login</button>
             </form>
         </div>
     </div>
+    <script src="../assets/js/loading-spinner.js"></script>
 </body>
 </html>
