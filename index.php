@@ -13,7 +13,7 @@ $user      = get_user_by_id($user_id);
 $leaves    = get_user_leaves($user_id);
 $used      = get_total_approved_leave($user_id);
 $remaining = get_sisa_cuti($user_id);
-$quota     = $user['annual_leave_quota'];
+$quota     = $user['hak_cuti'];
 $pct_used  = $quota > 0 ? round(($used / $quota) * 100) : 0;
 
 // Recent 5
@@ -42,12 +42,20 @@ $greeting = $hour < 12 ? 'Selamat Pagi' : ($hour < 17 ? 'Selamat Siang' : 'Selam
 </head>
 <body>
 
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+    <i class="fas fa-bars"></i>
+</button>
+
 <div class="container-fluid">
     <div class="row">
 
         <!-- SIDEBAR -->
-        <?php include 'assets/sidebar.php'; ?>
-        <div class="col-md-9 col-lg-10">
+        <?php
+        $active = 'home';
+        $userName = $user['nama'] ?? 'User';
+        include 'assets/sidebar.php';
+        ?>
 
         <!-- CONTENT -->
         <div class="col-md-10">
@@ -60,15 +68,12 @@ $greeting = $hour < 12 ? 'Selamat Pagi' : ($hour < 17 ? 'Selamat Siang' : 'Selam
                             <i class="fas fa-sun me-1"></i> <?= $greeting ?>
                         </p>
                         <h2 class="hero-name">
-                            <?= esc($user['nama_lengkap']) ?> <span>👋</span>
+                            <?= esc($user['nama']) ?> <span>👋</span>
                         </h2>
                         <p class="hero-sub">Pantau sisa cuti dan riwayat pengajuanmu di sini.</p>
                     </div>
                     <div class="hero-right">
                         <p class="hero-date"><i class="fas fa-calendar me-1"></i><?= date('d F Y') ?></p>
-                        <a href="ajukan.php" class="hero-apply-btn">
-                            <i class="fas fa-paper-plane"></i> Ajukan Cuti Sekarang
-                        </a>
                     </div>
                 </div>
 
@@ -97,30 +102,7 @@ $greeting = $hour < 12 ? 'Selamat Pagi' : ($hour < 17 ? 'Selamat Siang' : 'Selam
                     </div>
                 </div>
 
-                <!-- STATUS MINI STATS -->
-                <div class="two-col" style="grid-template-columns: repeat(3,1fr); margin-bottom:24px">
-                    <div class="mini-stat">
-                        <div class="ms-icon total"><i class="fas fa-layer-group"></i></div>
-                        <div class="ms-info">
-                            <div class="num"><?= count($leaves) ?></div>
-                            <div class="lbl">Total Pengajuan</div>
-                        </div>
-                    </div>
-                    <div class="mini-stat">
-                        <div class="ms-icon approved"><i class="fas fa-check-circle"></i></div>
-                        <div class="ms-info">
-                            <div class="num"><?= $cnt_approved ?></div>
-                            <div class="lbl">Disetujui</div>
-                        </div>
-                    </div>
-                    <div class="mini-stat">
-                        <div class="ms-icon pending"><i class="fas fa-clock"></i></div>
-                        <div class="ms-info">
-                            <div class="num"><?= $cnt_pending ?></div>
-                            <div class="lbl">Menunggu</div>
-                        </div>
-                    </div>
-                </div>
+               
 
                 <!-- RECENT TABLE -->
                 <div class="table-card">
@@ -184,7 +166,32 @@ $greeting = $hour < 12 ? 'Selamat Pagi' : ($hour < 17 ? 'Selamat Siang' : 'Selam
     </div><!-- /.row -->
 </div><!-- /.container-fluid -->
 
+<!-- Sidebar Overlay for Mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+<script>
+// Mobile Menu Toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const sidebar = document.getElementById('app-sidebar');
+const sidebarWrapper = sidebar ? sidebar.closest('.col-md-2') : null;
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+if (mobileMenuToggle && sidebar && sidebarWrapper && sidebarOverlay) {
+    mobileMenuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        sidebarWrapper.classList.toggle('active');
+        sidebarOverlay.classList.toggle('active');
+        document.body.classList.toggle('sidebar-open');
+    });
+
+    sidebarOverlay.addEventListener('click', function() {
+        sidebar.classList.remove('active');
+        sidebarWrapper.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+    });
+}
+</script>
 
 </body>
 </html>

@@ -1,0 +1,4 @@
+admin menginput jadwal cuti > tabel transaksi_cuti
+transaksi_cuti  mengambil data karyawan dan jabatan dari tabel:
+    1. karyawan
+    2. jabatan

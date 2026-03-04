@@ -65,7 +65,7 @@ function get_sisa_cuti($user_id) {
     $user = get_user_by_id($user_id);
     $used = get_total_approved_leave($user_id);
 
-    return $user['annual_leave_quota'] - $used;
+    return $user['hak_cuti'] - $used;
 }
 
 function get_user_by_username_npk($username, $npk) {
@@ -73,9 +73,9 @@ function get_user_by_username_npk($username, $npk) {
     $conn = koneksi_db();
 
     $stmt = mysqli_prepare($conn, "
-        SELECT id, username, nama_lengkap, annual_leave_quota
+        SELECT id, npk, nama, hak_cuti, sisa
         FROM users
-        WHERE username = ? AND npk = ?
+        WHERE nama = ? AND npk = ?
         LIMIT 1
     ");
 
@@ -96,7 +96,7 @@ function get_user_by_id($id) {
     $conn = koneksi_db();
 
     $stmt = mysqli_prepare($conn, "
-        SELECT id, username, nama_lengkap, annual_leave_quota
+        SELECT id, npk, nama, hak_cuti, sisa
         FROM users
         WHERE id = ?
         LIMIT 1

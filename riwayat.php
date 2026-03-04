@@ -42,11 +42,17 @@ $rejected      = count(array_filter($all_leaves, function($l) { return $l['statu
 </head>
 <body>
 
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
+    <i class="fas fa-bars"></i>
+</button>
+
 <div class="container-fluid">
     <div class="row">
 
         <?php
         $active = 'riwayat';
+        $userName = $user['nama'] ?? 'User';
         include __DIR__ . '/assets/sidebar.php';
         ?>
        
@@ -58,15 +64,13 @@ $rejected      = count(array_filter($all_leaves, function($l) { return $l['statu
                 <div class="topbar">
                     <div class="topbar-left">
                         <h4><i class="fas fa-history me-2" style="color:var(--blue)"></i>Riwayat Pengajuan Cuti</h4>
-                        <p>Halo, <strong><?= esc($user['nama_lengkap']) ?></strong> — berikut daftar pengajuan cutimu</p>
+                        <p>Halo, <strong><?= esc($user['nama']) ?></strong> — berikut daftar pengajuan cutimu</p>
                     </div>
                     <div class="topbar-actions">
                         <a href="index.php" class="btn-back">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
-                        <a href="logout.php" class="btn-logout">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                    
                     </div>
                 </div>
 
@@ -195,6 +199,33 @@ $rejected      = count(array_filter($all_leaves, function($l) { return $l['statu
         </div><!-- /.col-md-10 -->
     </div><!-- /.row -->
 </div><!-- /.container-fluid -->
+
+<!-- Sidebar Overlay for Mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script>
+// Mobile Menu Toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const sidebar = document.getElementById('app-sidebar');
+const sidebarWrapper = sidebar ? sidebar.closest('.col-md-2') : null;
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+if (mobileMenuToggle && sidebar && sidebarWrapper && sidebarOverlay) {
+    mobileMenuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+        sidebarWrapper.classList.toggle('active');
+        sidebarOverlay.classList.toggle('active');
+        document.body.classList.toggle('sidebar-open');
+    });
+
+    sidebarOverlay.addEventListener('click', function() {
+        sidebar.classList.remove('active');
+        sidebarWrapper.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+    });
+}
+</script>
 
 </body>
 </html>

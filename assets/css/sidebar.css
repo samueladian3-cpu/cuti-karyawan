@@ -257,3 +257,129 @@ html, body { height: 100%; }
     background: rgba(255,80,80,0.25);
     color: #ff6e6e;
 }
+
+/* ── MOBILE MENU TOGGLE ── */
+.mobile-menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 44px;
+    height: 44px;
+    background: #0b1e5b;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 1100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(11,30,91,0.3);
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: #1a3a9f;
+    transform: scale(1.05);
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* ── SIDEBAR OVERLAY ── */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    /* Show mobile menu toggle */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    /* Sidebar wrapper becomes fixed and hidden off-screen */
+    .col-md-2 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        z-index: 1050;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        padding: 0 !important;
+    }
+
+    /* When sidebar wrapper has active class, slide it in */
+    .col-md-2.active {
+        transform: translateX(0);
+    }
+
+    .sidebar {
+        position: static;
+        min-height: 100vh;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+    }
+
+    /* Main content takes full width */
+    .col-md-10 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        padding: 0;
+    }
+
+    /* Adjust page content padding for mobile toggle button */
+    .page-content {
+        padding-top: 80px !important;
+    }
+
+    /* Prevent body scroll when sidebar is open */
+    body.sidebar-open {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 576px) {
+    .col-md-2 {
+        width: 260px;
+    }
+
+    .mobile-menu-toggle {
+        top: 16px;
+        left: 16px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .logo-title {
+        font-size: 13px;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        padding: 9px 10px;
+    }
+
+    .user-name {
+        font-size: 11px;
+    }
+}

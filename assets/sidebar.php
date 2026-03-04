@@ -1,8 +1,8 @@
 <?php
 $baseUrl = isset($baseUrl) ? rtrim($baseUrl, '/') : '';
 $active  = $active ?? '';
-$userName = $userName ?? ($_SESSION['nama_lengkap'] ?? 'User');
-$userRole = $userRole ?? ($_SESSION['role'] ?? 'Karyawan');
+$userName = $userName ?? ($_SESSION['employee_name'] ?? 'User');
+$userRole = $userRole ?? 'Karyawan';
 $initial = mb_strtoupper(mb_substr($userName, 0, 1));
 
 function s($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); }
@@ -19,7 +19,7 @@ function url($path) { global $baseUrl; $path = '/' . ltrim($path, '/'); return $
             </div>
             <div class="logo-text">
                 <span class="logo-title">Cuti System</span>
-                <span class="logo-sub">Management Portal</span>
+                <span class="logo-sub">PT Gunung Sejahtera Dua Indah & PT Gunung Sejahtera Yoli Makmur</span>
             </div>
         </div>
     </div>

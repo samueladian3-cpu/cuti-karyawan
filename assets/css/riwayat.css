@@ -349,6 +349,261 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-            .stat-grid { grid-template-columns: repeat(2, 1fr); }
-            .page-content { padding: 24px 20px; }
+            .stat-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .page-content { 
+                padding: 24px 20px; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Topbar */
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+
+            .topbar-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .btn-back,
+            .btn-logout {
+                flex: 1;
+                justify-content: center;
+            }
+
+            /* Stat cards - 2 kolom */
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 18px;
+                gap: 10px;
+            }
+
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .stat-info .num {
+                font-size: 22px;
+            }
+
+            .stat-info .lbl {
+                font-size: 11px;
+            }
+
+            /* Filter bar */
+            .filter-bar {
+                gap: 6px;
+                margin-bottom: 16px;
+            }
+
+            .filter-pill {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+
+            /* Table card */
+            .table-card-header {
+                padding: 14px 18px;
+                flex-wrap: wrap;
+            }
+
+            .table-card-header .count-badge {
+                order: 3;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 8px;
+                text-align: center;
+            }
+
+            /* Table responsive */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 600px;
+                font-size: 12px;
+            }
+
+            thead th {
+                padding: 10px 14px;
+                font-size: 10px;
+            }
+
+            tbody td {
+                padding: 12px 14px;
+                font-size: 12px;
+            }
+
+            .td-num {
+                font-size: 11px;
+            }
+
+            .status-badge {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+
+            /* Empty state */
+            .empty-state {
+                padding: 40px 20px;
+            }
+
+            .empty-state .empty-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            /* Page content */
+            .page-content {
+                padding: 16px 12px;
+            }
+
+            /* Topbar */
+            .topbar {
+                margin-bottom: 20px;
+            }
+
+            .topbar-left h4 {
+                font-size: 18px;
+            }
+
+            .topbar-left p {
+                font-size: 12px;
+            }
+
+            .topbar-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .btn-back,
+            .btn-logout {
+                width: 100%;
+                padding: 10px 16px;
+            }
+
+            /* Stat grid - 1 kolom di mobile kecil */
+            .stat-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .stat-card {
+                flex-direction: row;
+                text-align: left;
+                padding: 16px;
+                gap: 14px;
+            }
+
+            .stat-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 17px;
+            }
+
+            .stat-info .num {
+                font-size: 20px;
+            }
+
+            /* Filter pills */
+            .filter-bar {
+                gap: 6px;
+                margin-bottom: 14px;
+            }
+
+            .filter-pill {
+                padding: 6px 12px;
+                font-size: 11px;
+                flex: 1;
+                text-align: center;
+                display: inline-flex;
+                justify-content: center;
+            }
+
+            /* Table card */
+            .table-card-header {
+                padding: 12px 14px;
+            }
+
+            .table-card-header .tch-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+
+            .table-card-header span {
+                font-size: 13px;
+            }
+
+            .table-card-header .count-badge {
+                font-size: 11px;
+                padding: 2px 8px;
+            }
+
+            /* Table - still scrollable */
+            table {
+                min-width: 600px;
+                font-size: 11px;
+            }
+
+            thead th {
+                padding: 10px 12px;
+                font-size: 9px;
+            }
+
+            tbody td {
+                padding: 10px 12px;
+                font-size: 11px;
+            }
+
+            .status-badge {
+                padding: 3px 8px;
+                font-size: 10px;
+                gap: 4px;
+            }
+
+            .status-dot {
+                width: 5px;
+                height: 5px;
+            }
+
+            /* Empty state */
+            .empty-state {
+                padding: 30px 16px;
+            }
+
+            .empty-state .empty-icon {
+                width: 52px;
+                height: 52px;
+                font-size: 22px;
+                margin-bottom: 12px;
+            }
+
+            .empty-state h6 {
+                font-size: 14px;
+            }
+
+            .empty-state p {
+                font-size: 12px;
+            }
         }

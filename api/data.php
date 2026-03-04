@@ -72,15 +72,15 @@ try {
                 exit;
             }
             
-            $quota = $user['annual_leave_quota'] ?? 12;
+            $quota = $user['hak_cuti'] ?? 12;
             $pct_used = $quota > 0 ? round(($used / $quota) * 100) : 0;
             
             api_response(true, [
                 'user' => [
                     'id' => $user['id'] ?? null,
-                    'name' => $user['name'] ?? (($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')),
-                    'email' => $user['email'] ?? null,
-                    'department' => $user['department'] ?? null
+                    'name' => $user['nama'] ?? null,
+                    'npk' => $user['npk'] ?? null,
+                    'jabatan' => $user['jabatan'] ?? null
                 ],
                 'leaves' => [
                     'approved' => count(array_filter($leaves, fn($l) => $l['status'] === 'approved')),

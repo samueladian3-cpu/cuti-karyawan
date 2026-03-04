@@ -11,6 +11,8 @@ $conn = koneksi_db();
     <title>Dashboard Admin - Cuti Karyawan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin-sidebar.css">
     <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
     <link rel="stylesheet" href="../assets/css/spinner.css">
     <style>
@@ -32,14 +34,14 @@ $conn = koneksi_db();
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 24px;
+            margin-bottom: 40px;
         }
 
         .stat-card {
             background: white;
             border-radius: 12px;
-            padding: 24px;
+            padding: 28px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border-left: 4px solid #4f8cff;
@@ -101,15 +103,15 @@ $conn = koneksi_db();
         .form-section {
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
         }
 
         .form-section h6 {
             color: #4f8cff;
             font-weight: 700;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #4f8cff;
             display: flex;
             align-items: center;
@@ -119,7 +121,8 @@ $conn = koneksi_db();
         .form-label {
             font-weight: 600;
             color: #0b1e5b;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            display: block;
         }
 
         .form-control {
@@ -141,7 +144,7 @@ $conn = koneksi_db();
         .row-custom {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 18px;
         }
     </style>
 </head>
@@ -154,79 +157,23 @@ $conn = koneksi_db();
         </div>
     </div>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <!-- Brand Header -->
-        <div class="sidebar-header">
-            <div class="brand-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h2m8-18h2a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-2m-8-2V5m0 14v-2m0-10v2M8 5h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <div class="brand-text">
-                <h3>Cuti Admin</h3>
-                <p>Management</p>
-            </div>
-        </div>
-
-        <!-- Main Navigation -->
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="section-label">Menu Utama</div>
-                <ul class="nav-links">
-                    <li>
-                        <a href="#" class="nav-link active" data-page="dashboard">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16M3 21v-5h5"/>
-                            </svg>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link" data-page="data-karyawan">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M16 11a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM23 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                            </svg>
-                            <span>Data Karyawan</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- User Profile Section -->
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="8" r="4"/>
-                        <path d="M12 14c-6 0-8 3-8 3v6h16v-6c0 0-2-3-8-3z"/>
-                    </svg>
-                </div>
-                <div class="user-info">
-                    <h6>Admin User</h6>
-                    <p>Administrator</p>
-                </div>
-            </div>
-            <a href="../admin-cuti/logout.php" class="btn-logout" onclick="showSpinner()">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
-    </svg>
-</a>
-        </div>
-    </aside>
-
-    <!-- Toggle Button (Mobile) -->
-    <button class="sidebar-toggle" id="sidebarToggle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
+    <!-- Mobile Menu Toggle -->
+    <button class="admin-mobile-menu-toggle" id="adminMobileMenuToggle" aria-label="Toggle Menu">
+        <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Main Content -->
-    <main class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- SIDEBAR -->
+            <?php
+            $active = 'dashboard';
+            include '../assets/admin-sidebar.php';
+            ?>
+
+            <!-- MAIN CONTENT -->
+            <div class="col-md-10">
+                <main class="main-content">
         <!-- Dashboard Page -->
         <div id="dashboard-page" class="page-content active">
             <div class="dashboard-content">
@@ -236,42 +183,42 @@ $conn = koneksi_db();
                 <!-- Statistik Cards -->
                 <div class="stat-grid">
                     <!-- Total Karyawan -->
-                    <div class="stat-card" style="border-left-color: #4f8cff;">
+                    <div class="stat-card stat-card-blue">
                         <h5><i class="fas fa-users"></i> Total Karyawan</h5>
                         <div class="number" id="stat-total-karyawan">0</div>
                         <div class="description">Terdaftar dalam sistem</div>
                     </div>
                     
                     <!-- Karyawan Aktif -->
-                    <div class="stat-card active" style="border-left-color: #52d1b0;">
+                    <div class="stat-card stat-card-teal">
                         <h5><i class="fas fa-user-check"></i> Status Aktif</h5>
                         <div class="number" id="stat-karyawan-aktif">0</div>
                         <div class="description">Karyawan dengan status aktif</div>
                     </div>
                     
                     <!-- Total Hak Cuti -->
-                    <div class="stat-card" style="border-left-color: #ffc107;">
+                    <div class="stat-card stat-card-yellow">
                         <h5><i class="fas fa-calendar-alt"></i> Total Hak Cuti</h5>
                         <div class="number" id="stat-total-hak">0</div>
                         <div class="description">Hari kerja</div>
                     </div>
                     
                     <!-- Cuti Terpakai -->
-                    <div class="stat-card rejected" style="border-left-color: #e03131;">
+                    <div class="stat-card stat-card-red">
                         <h5><i class="fas fa-calendar-times"></i> Cuti Terpakai</h5>
                         <div class="number" id="stat-cuti-terpakai">0</div>
                         <div class="description">Hari kerja (<span id="stat-persentase">0%</span>)</div>
                     </div>
                     
                     <!-- Sisa Cuti -->
-                    <div class="stat-card" style="border-left-color: #52d1b0;">
+                    <div class="stat-card stat-card-teal">
                         <h5><i class="fas fa-calendar-check"></i> Sisa Cuti</h5>
                         <div class="number" id="stat-sisa-cuti">0</div>
                         <div class="description">Hari kerja tersisa</div>
                     </div>
                     
                     <!-- Rata-rata Sisa -->
-                    <div class="stat-card" style="border-left-color: #4f8cff;">
+                    <div class="stat-card stat-card-blue">
                         <h5><i class="fas fa-chart-line"></i> Rata-rata Sisa</h5>
                         <div class="number" id="stat-avg-sisa">0</div>
                         <div class="description">Hari per karyawan</div>
@@ -279,48 +226,48 @@ $conn = koneksi_db();
                 </div>
                 
                 <!-- Breakdown by Status -->
-                <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h4 style="color: #0b1e5b; margin-bottom: 20px; font-weight: 700;"><i class="fas fa-chart-bar" style="margin-right: 8px;"></i> Breakdown Status Karyawan</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                        <div style="background: #e8f8f0; padding: 16px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #52d1b0;" id="breakdown-aktif">0</div>
-                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Aktif</div>
+                <div class="breakdown-section">
+                    <h4 class="section-title"><i class="fas fa-chart-bar"></i> Breakdown Status Karyawan</h4>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item breakdown-item-teal">
+                            <div class="breakdown-number" id="breakdown-aktif">0</div>
+                            <div class="breakdown-label">Aktif</div>
                         </div>
-                        <div style="background: #fff4e8; padding: 16px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #ff6d00;" id="breakdown-hangus">0</div>
-                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Hangus</div>
+                        <div class="breakdown-item breakdown-item-orange">
+                            <div class="breakdown-number" id="breakdown-hangus">0</div>
+                            <div class="breakdown-label">Hangus</div>
                         </div>
-                        <div style="background: #e8f0ff; padding: 16px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #4f8cff;" id="breakdown-selesai">0</div>
-                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Selesai</div>
+                        <div class="breakdown-item breakdown-item-blue">
+                            <div class="breakdown-number" id="breakdown-selesai">0</div>
+                            <div class="breakdown-label">Selesai</div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Breakdown by Tipe Cuti -->
-                <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h4 style="color: #0b1e5b; margin-bottom: 20px; font-weight: 700;"><i class="fas fa-clipboard-list" style="margin-right: 8px;"></i> Breakdown Tipe Cuti</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                        <div style="background: #e8f0ff; padding: 16px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #4f8cff;" id="breakdown-normal">0</div>
-                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Normal</div>
+                <div class="breakdown-section">
+                    <h4 class="section-title"><i class="fas fa-clipboard-list"></i> Breakdown Tipe Cuti</h4>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item breakdown-item-blue">
+                            <div class="breakdown-number" id="breakdown-normal">0</div>
+                            <div class="breakdown-label">Normal</div>
                         </div>
-                        <div style="background: #fff4e8; padding: 16px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #ff6d00;" id="breakdown-tentative">0</div>
-                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Tentative</div>
+                        <div class="breakdown-item breakdown-item-orange">
+                            <div class="breakdown-number" id="breakdown-tentative">0</div>
+                            <div class="breakdown-label">Tentative</div>
                         </div>
-                        <div style="background: #ffe8e8; padding: 16px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 28px; font-weight: 700; color: #e03131;" id="breakdown-pinjam">0</div>
-                            <div style="color: #666; font-size: 14px; margin-top: 4px;">Pinjam</div>
+                        <div class="breakdown-item breakdown-item-red">
+                            <div class="breakdown-number" id="breakdown-pinjam">0</div>
+                            <div class="breakdown-label">Pinjam</div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Karyawan Terbaru -->
-                <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h4 style="color: #0b1e5b; margin-bottom: 20px; font-weight: 700;"><i class="fas fa-users" style="margin-right: 8px;"></i> 5 Karyawan Terbaru</h4>
+                <div class="breakdown-section">
+                    <h4 class="section-title"><i class="fas fa-users"></i> 5 Karyawan Terbaru</h4>
                     <div id="karyawan-terbaru-list">
-                        <div style="padding: 20px; text-align: center; color: #999;">Loading...</div>
+                        <div class="loading-text">Loading...</div>
                     </div>
                 </div>
             </div>
@@ -329,31 +276,33 @@ $conn = koneksi_db();
         <!-- Data Karyawan Page -->
         <div id="data-karyawan-page" class="page-content">
             <div class="dashboard-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div class="page-header">
                     <div>
                         <h2>Data Karyawan</h2>
                         <p class="subtitle">Kelola data dan jadwal cuti karyawan</p>
                     </div>
-                    <button class="btn-add-karyawan" id="btnAddKaryawan" style="padding: 10px 20px; background: #4f8cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Tambah Karyawan</button>
+                    <button class="btn-add-karyawan" id="btnAddKaryawan">
+                        <i class="fas fa-plus"></i> Tambah Karyawan
+                    </button>
                 </div>
 
                 <!-- Tabel Karyawan -->
-                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; min-width: 1200px;">
+                <div class="table-container">
+                    <table class="table-karyawan">
                         <thead>
-                            <tr style="background: #f8faff; border-bottom: 2px solid #e0e7ff;">
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">No</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">NPK</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Nama</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Jabatan</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Tgl Masuk</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Tahun Hak</th>
-                                <th style="padding: 16px; text-align: center; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Hak Cuti</th>
-                                <th style="padding: 16px; text-align: center; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Terpakai</th>
-                                <th style="padding: 16px; text-align: center; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Sisa</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Tipe</th>
-                                <th style="padding: 16px; text-align: left; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Status</th>
-                                <th style="padding: 16px; text-align: center; color: #0b1e5b; font-weight: 600; font-size: 13px; white-space: nowrap;">Aksi</th>
+                            <tr>
+                                <th>No</th>
+                                <th>NPK</th>
+                                <th>Nama</th>
+                                <th>Jabatan</th>
+                                <th>Tgl Masuk</th>
+                                <th>Tahun Hak</th>
+                                <th class="text-center">Hak Cuti</th>
+                                <th class="text-center">Terpakai</th>
+                                <th class="text-center">Sisa</th>
+                                <th>Tipe</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="tableKaryawan">
@@ -426,7 +375,7 @@ $conn = koneksi_db();
                                     <label class="form-label">Berlaku Sampai <span class="required">*</span></label>
                                     <input type="date" class="form-control" name="berlaku_sampai" required>
                                 </div>
-                                <div class="form-group" style="grid-column: span 2;">
+                                <div class="form-group form-group-full">
                                     <label class="form-label">Tentative Sampai <span class="required">*</span></label>
                                     <input type="date" class="form-control" name="tentative_sampai" required>
                                     <small class="text-muted">Batas akhir cuti tentative</small>
@@ -471,7 +420,7 @@ $conn = koneksi_db();
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="modal-footer" style="padding: 20px; border-top: 1px solid #e0e7ff;">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times"></i> Batal
                     </button>
@@ -488,7 +437,7 @@ $conn = koneksi_db();
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
-                <div class="modal-header" style="background: linear-gradient(135deg, #e03131 0%, #c41e3a 100%);">
+                <div class="modal-header modal-header-danger">
                     <h5 class="modal-title">
                         <i class="fas fa-exclamation-triangle"></i> Konfirmasi Penghapusan
                     </h5>
@@ -497,18 +446,21 @@ $conn = koneksi_db();
 
                 <!-- Modal Body -->
                 <div class="modal-body">
-                    <div style="text-align: center; padding: 20px 0;">
-                        <i class="fas fa-trash-alt" style="font-size: 48px; color: #e03131; margin-bottom: 15px;"></i>
-                        <h6 style="color: #0b1e5b; margin-top: 15px; margin-bottom: 10px; font-size: 16px; font-weight: 600;">Hapus Data Karyawan</h6>
-                        <p style="color: #666; margin-bottom: 10px;">Apakah Anda yakin ingin menghapus data karyawan:</p>
-                        <p style="color: #0b1e5b; font-weight: 600; font-size: 16px; margin-bottom: 20px;" id="deleteKaryawanNama">-</p>
-                        <p style="color: #e03131; font-size: 13px;"><i class="fas fa-exclamation-triangle"></i> Tindakan ini tidak dapat dibatalkan. Semua data terkait akan dihapus dari sistem.</p>
+                    <div class="delete-confirmation">
+                        <i class="fas fa-trash-alt delete-icon"></i>
+                        <h6 class="delete-title">Hapus Data Karyawan</h6>
+                        <p class="delete-message">Apakah Anda yakin ingin menghapus data karyawan:</p>
+                        <p class="delete-name" id="deleteKaryawanNama">-</p>
+                        <p class="delete-warning">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Tindakan ini tidak dapat dibatalkan. Semua data terkait akan dihapus dari sistem.
+                        </p>
                     </div>
                     <input type="hidden" id="deleteKaryawanId" value="">
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="modal-footer" style="padding: 20px; border-top: 1px solid #e0e7ff;">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times"></i> Batal
                     </button>
@@ -551,10 +503,8 @@ $conn = koneksi_db();
         });
 
         // ── SIDEBAR NAVIGATION ──
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.admin-nav-link');
         const pageContents = document.querySelectorAll('.page-content');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
 
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -575,9 +525,17 @@ $conn = koneksi_db();
 
                     hideSpinner(); // SEMBUNYIKAN SPINNER
 
-                    // Close sidebar on mobile
-                    if (window.innerWidth < 768) {
-                        sidebar.classList.remove('active');
+                    // Close admin sidebar on mobile
+                    if (window.innerWidth <= 768) {
+                        const adminSidebar = document.getElementById('adminSidebar');
+                        const sidebarWrapper = adminSidebar ? adminSidebar.closest('.col-md-2') : null;
+                        const adminSidebarOverlay = document.getElementById('adminSidebarOverlay');
+                        if (adminSidebar && sidebarWrapper && adminSidebarOverlay) {
+                            adminSidebar.classList.remove('active');
+                            sidebarWrapper.classList.remove('active');
+                            adminSidebarOverlay.classList.remove('active');
+                            document.body.classList.remove('admin-sidebar-open');
+                        }
                     }
                 }, 600); // Delay sesuai animasi spinner
             });
@@ -740,10 +698,27 @@ $conn = koneksi_db();
             });
         });
 
-        // Sidebar Toggle
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
+        // Admin Mobile Menu Toggle
+        const adminMobileMenuToggle = document.getElementById('adminMobileMenuToggle');
+        const adminSidebar = document.getElementById('adminSidebar');
+        const sidebarWrapper = adminSidebar ? adminSidebar.closest('.col-md-2') : null;
+        const adminSidebarOverlay = document.getElementById('adminSidebarOverlay');
+
+        if (adminMobileMenuToggle && adminSidebar && sidebarWrapper && adminSidebarOverlay) {
+            adminMobileMenuToggle.addEventListener('click', function() {
+                adminSidebar.classList.toggle('active');
+                sidebarWrapper.classList.toggle('active');
+                adminSidebarOverlay.classList.toggle('active');
+                document.body.classList.toggle('admin-sidebar-open');
+            });
+
+            adminSidebarOverlay.addEventListener('click', function() {
+                adminSidebar.classList.remove('active');
+                sidebarWrapper.classList.remove('active');
+                adminSidebarOverlay.classList.remove('active');
+                document.body.classList.remove('admin-sidebar-open');
+            });
+        }
 
         // ── LOAD STATISTIK DASHBOARD ──
         function loadStatistik() {
@@ -778,19 +753,19 @@ $conn = koneksi_db();
                         const terbaruList = document.getElementById('karyawan-terbaru-list');
                         if (data.karyawan_terbaru.length > 0) {
                             terbaruList.innerHTML = data.karyawan_terbaru.map(k => `
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e0e7ff;">
-                                    <div>
-                                        <div style="font-weight: 600; color: #0b1e5b;">${k.nama}</div>
-                                        <div style="font-size: 13px; color: #666;">${k.npk} • ${k.jabatan}</div>
+                                <div class="karyawan-item">
+                                    <div class="karyawan-info">
+                                        <div class="karyawan-name">${k.nama}</div>
+                                        <div class="karyawan-details">${k.npk} • ${k.jabatan}</div>
                                     </div>
-                                    <div style="text-align: right;">
-                                        <div style="font-size: 20px; font-weight: 700; color: #4f8cff;">${k.sisa}/${k.hak_cuti}</div>
-                                        <div style="font-size: 12px; color: #999;">Sisa Cuti</div>
+                                    <div class="karyawan-cuti">
+                                        <div class="cuti-number">${k.sisa}/${k.hak_cuti}</div>
+                                        <div class="cuti-label">Sisa Cuti</div>
                                     </div>
                                 </div>
                             `).join('');
                         } else {
-                            terbaruList.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">Belum ada data</div>';
+                            terbaruList.innerHTML = '<div class="loading-text">Belum ada data</div>';
                         }
                         
                         console.log('✅ Statistik loaded successfully');
@@ -832,7 +807,7 @@ $conn = koneksi_db();
                     if (!data.success) {
                         const errorMsg = data.message || 'Unknown error';
                         console.error('❌ API Error:', errorMsg);
-                        tbody.innerHTML = `<tr><td colspan="12" align="center" style="padding: 40px; color: #e03131;">
+                        tbody.innerHTML = `<tr><td colspan="12" class="table-error">
                             <strong><i class="fas fa-exclamation-circle"></i> Error:</strong> ${errorMsg}
                             ${data.error_detail ? '<br><small>' + data.error_detail + '</small>' : ''}
                             <br><small><a href="../debug.php" target="_blank">Buka debug.php untuk informasi lebih lanjut</a></small>
@@ -841,7 +816,10 @@ $conn = koneksi_db();
                     }
                     
                     if (data.data.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="12" align="center" style="padding: 40px; color: #999;"><i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.3;"></i>Belum ada data karyawan</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="12" class="table-empty">
+                            <i class="fas fa-inbox"></i>
+                            <span>Belum ada data karyawan</span>
+                        </td></tr>`;
                         console.log('ℹ️ No data available');
                         return;
                     }
@@ -850,20 +828,20 @@ $conn = koneksi_db();
                     
                     // Generate table rows
                     tbody.innerHTML = data.data.map((karyawan, index) => `
-                        <tr style="border-bottom: 1px solid #e0e7ff;">
-                            <td style="padding: 16px; color: #666;">${index + 1}</td>
-                            <td style="padding: 16px; color: #0b1e5b; font-weight: 600;">${karyawan.npk}</td>
-                            <td style="padding: 16px; color: #0b1e5b;">${karyawan.nama}</td>
-                            <td style="padding: 16px; color: #666;">${karyawan.jabatan || '-'}</td>
-                            <td style="padding: 16px; color: #666; white-space: nowrap;">${karyawan.tgl_masuk}</td>
-                            <td style="padding: 16px; color: #666;">${karyawan.tahun_hak}</td>
-                            <td style="padding: 16px; text-align: center; color: #0b1e5b; font-weight: 600;">${karyawan.hak_cuti}</td>
-                            <td style="padding: 16px; text-align: center; color: #666;">${karyawan.hk || 0}</td>
-                            <td style="padding: 16px; text-align: center; color: #4f8cff; font-weight: 600;">${karyawan.sisa || karyawan.hak_cuti}</td>
-                            <td style="padding: 16px;"><span style="background: #e8f0ff; color: #4f8cff; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;">${karyawan.tipe}</span></td>
-                            <td style="padding: 16px;"><span style="background: ${karyawan.status === 'aktif' ? '#e8f8f0' : '#fff4e8'}; color: ${karyawan.status === 'aktif' ? '#52d1b0' : '#ff6d00'}; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;">${karyawan.status}</span></td>
-                            <td style="padding: 16px; text-align: center;">
-                                <button class="btn-delete" data-id="${karyawan.id}" data-nama="${karyawan.nama}" style="background: #e03131; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td class="td-npk">${karyawan.npk}</td>
+                            <td class="td-nama">${karyawan.nama}</td>
+                            <td>${karyawan.jabatan || '-'}</td>
+                            <td class="td-date">${karyawan.tgl_masuk}</td>
+                            <td>${karyawan.tahun_hak}</td>
+                            <td class="text-center td-primary">${karyawan.hak_cuti}</td>
+                            <td class="text-center">${karyawan.hk || 0}</td>
+                            <td class="text-center td-highlight">${karyawan.sisa || karyawan.hak_cuti}</td>
+                            <td><span class="badge badge-tipe">${karyawan.tipe}</span></td>
+                            <td><span class="badge badge-${karyawan.status}">${karyawan.status}</span></td>
+                            <td class="text-center">
+                                <button class="btn-delete" data-id="${karyawan.id}" data-nama="${karyawan.nama}">
                                     <i class="fas fa-trash-alt"></i> Hapus
                                 </button>
                             </td>
@@ -875,7 +853,7 @@ $conn = koneksi_db();
                 })
                 .catch(error => {
                     console.error('❌ Full Error:', error);
-                    tbody.innerHTML = `<tr><td colspan="12" align="center" style="padding: 40px; color: #e03131;">
+                    tbody.innerHTML = `<tr><td colspan="12" class="table-error">
                         <strong><i class="fas fa-exclamation-triangle"></i> Error mengambil data:</strong> ${error.message}
                         <br><small><a href="../debug.php" target="_blank">Buka debug.php untuk informasi lebih lanjut</a></small>
                     </td></tr>`;
@@ -922,5 +900,14 @@ $conn = koneksi_db();
             loadStatistik();
         }
     </script>
+
+                </main><!-- /.main-content -->
+            </div><!-- /.col-md-10 -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+
+    <!-- Admin Sidebar Overlay for Mobile -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
 </body>
 </html>
